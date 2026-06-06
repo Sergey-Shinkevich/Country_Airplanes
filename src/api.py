@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 import requests
 
@@ -8,7 +8,9 @@ class APIClient(ABC):
     """Абстрактный класс"""
 
     @abstractmethod
-    def connect(self, ) -> bool:
+    def connect(
+        self,
+    ) -> bool:
         """Шаблон метода для проверки связи до API"""
         pass
 
@@ -37,7 +39,6 @@ class AirTrafficAPI(APIClient):
         except requests.exceptions.RequestException:
             return False
 
-
     def get_data(self, country: str) -> None:
         """Метод получения самолетов на данной территории"""
         if not self.connect():
@@ -45,19 +46,24 @@ class AirTrafficAPI(APIClient):
         try:
             # Работа с openstreetmap
             headers = {"User-Agent": "test-app"}
-            params_nominatim: Dict[str, Any] = {'country': country, 'format': 'json', 'limit': 1}
+            params_nominatim: Dict[str, Any] = {"country": country, "format": "json", "limit": 1}
             response_geo = requests.get(self.__nominatim_url, params=params_nominatim, headers=headers, timeout=10)
             response_geo.raise_for_status()
             geo_data = response_geo.json()
             if not isinstance(geo_data, list) or not geo_data:
                 raise ValueError(f"Страна {country} не найдена.")
             item = geo_data[0]
-            bbox = item.get('boundingbox')
+            bbox = item.get("boundingbox")
             if not bbox:
                 raise ValueError(f"Координаты для {country} не найдены.")
 
             # Работа с opensky-network
-            params_sky: Dict[str, Any] = {"lamin": float(bbox[0]), "lamax": float(bbox[1]), "lomin": float(bbox[2]), "lomax": float(bbox[3])}
+            params_sky: Dict[str, Any] = {
+                "lamin": float(bbox[0]),
+                "lamax": float(bbox[1]),
+                "lomin": float(bbox[2]),
+                "lomax": float(bbox[3]),
+            }
             response_sky = requests.get(self.__opensky_url, params=params_sky, timeout=10)
             response_sky.raise_for_status()
             self.aeroplanes = response_sky.json()

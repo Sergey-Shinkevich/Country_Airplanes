@@ -20,23 +20,25 @@ def test_invalid_country() -> None:
         api.get_data("NonExistentCountryName123")
 
 
-@patch("src.api.requests.get")
-def test_get_data_success(mock_get: Any) -> None:
-    """Тестируем успешный сценарий"""
-    # Мок нап гео
+@patch("src.api.AirTrafficAPI.connect")  # Мокаем connect
+@patch("src.api.requests.get")  # Мокаем requests.get
+def test_get_data_success(mock_get: Any, mock_connect: Any) -> None:
+    """Тестируем успешный сценарий с замоканным коннектом"""
+    mock_connect.return_value = True
+
     mock_resp_geo = MagicMock()
     mock_resp_geo.status_code = 200
     mock_resp_geo.json.return_value = [{"boundingbox": ["1", "2", "3", "4"]}]
-    # Мок на самолеты
+
     mock_resp_sky = MagicMock()
     mock_resp_sky.status_code = 200
     mock_resp_sky.json.return_value = {"states": [["icao1", "callsign1"]]}
     mock_get.side_effect = [mock_resp_geo, mock_resp_sky]
-    # Запуск
+
     api = AirTrafficAPI()
     api.get_data("Canada")
-    # Проверка
+
     assert api.aeroplanes is not None
     assert api.aeroplanes["states"][0][0] == "icao1"
-
     assert mock_get.call_count == 2
+    mock_connect.assert_called_once()
