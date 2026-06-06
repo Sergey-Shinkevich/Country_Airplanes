@@ -26,7 +26,6 @@ def test_invalid_country(mock_connect: Any) -> None:
             api.get_data("NonExistentCountryName123")
 
 
-
 @patch("src.api.AirTrafficAPI.connect")  # Мокаем connect
 @patch("src.api.requests.get")  # Мокаем requests.get
 def test_get_data_success(mock_get: Any, mock_connect: Any) -> None:

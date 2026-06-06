@@ -73,4 +73,3 @@ class AirTrafficAPI(APIClient):
             raise
         except requests.exceptions.RequestException as e:
             print(f"Сетевая ошибка: {e}")
-
