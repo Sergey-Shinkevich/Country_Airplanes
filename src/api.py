@@ -74,8 +74,3 @@ class AirTrafficAPI(APIClient):
         except requests.exceptions.RequestException as e:
             print(f"Сетевая ошибка: {e}")
 
-
-# Использование
-api = AirTrafficAPI()
-api.get_data("Canada")
-print(api.aeroplanes)

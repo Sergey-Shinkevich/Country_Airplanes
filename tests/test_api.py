@@ -12,12 +12,19 @@ def test_initialization() -> None:
     assert api.aeroplanes is None
 
 
-def test_invalid_country() -> None:
+@patch("src.api.AirTrafficAPI.connect")  # Мокаем connect
+def test_invalid_country(mock_connect: Any) -> None:
     """Проверка обработки несуществующей страны"""
+    mock_connect.return_value = True
     api = AirTrafficAPI()
-    # Ожидаем ошибку ValueError, которую мы сами прописали
-    with pytest.raises(ValueError, match="не найдена"):
-        api.get_data("NonExistentCountryName123")
+
+    with patch("src.api.requests.get") as mock_get:
+        mock_resp = MagicMock()
+        mock_resp.json.return_value = []
+        mock_get.return_value = mock_resp
+        with pytest.raises(ValueError, match="не найдена"):
+            api.get_data("NonExistentCountryName123")
+
 
 
 @patch("src.api.AirTrafficAPI.connect")  # Мокаем connect
