@@ -3,6 +3,8 @@ from typing import Any, Dict
 
 import requests
 
+from src.airplanes import Airplane
+
 
 class APIClient(ABC):
     """Абстрактный класс"""
@@ -27,7 +29,7 @@ class AirTrafficAPI(APIClient):
         """Метод - конструктор"""
         self.__nominatim_url = "https://nominatim.openstreetmap.org/search"
         self.__opensky_url = "https://opensky-network.org/api/states/all"
-        self.airplanes = None
+        self.airplanes: list = []
 
     def connect(self) -> bool:
         """Проверяет доступность API."""
@@ -66,9 +68,13 @@ class AirTrafficAPI(APIClient):
             }
             response_sky = requests.get(self.__opensky_url, params=params_sky, timeout=10)
             response_sky.raise_for_status()
-            self.airplanes = response_sky.json()
-
-            # Обработка ошибок
+            data = response_sky.json()
+            states = data.get("states")
+            if states:
+                self.airplanes = [Airplane.from_api(s) for s in states]
+            else:
+                self.airplanes = []
+                print("Самолеты на данной территории не найдены.")
         except ValueError:
             raise
         except requests.exceptions.RequestException as e:

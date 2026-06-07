@@ -37,26 +37,18 @@ def test_airplanes_init_none_values() -> None:
     assert plane.geo_altitude == 0.0
 
 
-def test_cast_to_object_list() -> None:
-    """Проверка превращения JSON в список объектов"""
-    mock_json = {
-        "states": [
-            ["icao1", "callsign1", "Country1", None, None, None, None, 1000.0, None, 500.0],
-            ["icao2", "callsign2", "Country2", None, None, None, None, 2000.0, None, 600.0],
-        ]
-    }
-
-    planes = Airplane.cast_to_object_list(mock_json)
-
-    assert len(planes) == 2
-    assert isinstance(planes[0], Airplane)
-
-    assert planes[0].callsign == "callsign1"
-    assert planes[0].geo_altitude == 1000.0
-    assert planes[1].velocity == 600.0
+def test_from_api_success() -> None:
+    """Проверка создания объекта из данных API"""
+    raw_data = ["icao1", "callsign1", "Country1", None, None, None, None, 1000.0, None, 500.0]
+    plane = Airplane.from_api(raw_data)
+    assert isinstance(plane, Airplane)
+    assert plane.icao24 == "icao1"
+    assert plane.callsign == "callsign1"
+    assert plane.geo_altitude == 1000.0
+    assert plane.velocity == 500.0
 
 
-def test_cast_to_object_list_empty() -> None:
-    """Проверка, что метод не падает при пустых данных"""
-    assert Airplane.cast_to_object_list({}) == []
-    assert Airplane.cast_to_object_list({"states": None}) == []
+def test_from_api_invalid_data() -> None:
+    """Проверка, что метод возвращает None при плохих данных"""
+    assert Airplane.from_api([]) is None
+    assert Airplane.from_api(["short", "list"]) is None

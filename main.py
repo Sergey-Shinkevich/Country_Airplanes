@@ -1,15 +1,14 @@
 from src.airplanes import Airplane
 from src.api import AirTrafficAPI
+from src.file_operation import JSONSaver
 
 if __name__ == "__main__":
-    # 1. Создание экземпляра класса для работы с API сайтов с самолетами
+    # 1. Получаем данные (api.airplanes уже содержит список объектов Airplane)
     api = AirTrafficAPI()
-
-    # 2. Получение информации о самолетах с opensky-network.org
     api.get_data("Canada")
-    airplanes = api.airplanes
 
-    # 3. Преобразование набора данных в список объектов
-    airplanes = Airplane.cast_to_object_list(airplanes)
+    # 2. Создаем объект-сохранитель
+    saver = JSONSaver("data/data.json")
 
-
+    # 3. Сохраняем полученные самолеты в файл
+    saver.save_all(api.airplanes)
