@@ -45,6 +45,7 @@ class JSONSaver(AbstractSaver):
         with open(self.filename, "w", encoding="utf-8") as f:
             json.dump(data_to_save, f, ensure_ascii=False, indent=4)
         print(f"Самолет {airplane.callsign} (ICAO24: {airplane.icao24}) добавлен в {self.filename}")
+        print(f"База обновлена. Теперь в ней {len(airplanes_list)} самолетов.")
 
     def get_all(self, **kwargs: Any) -> list[Airplane]:
         """Считывает данные и превращает их в список объектов Airplane"""
@@ -68,6 +69,7 @@ class JSONSaver(AbstractSaver):
             with open(self.filename, "w", encoding="utf-8") as f:
                 json.dump(data_to_save, f, ensure_ascii=False, indent=4)
             print(f"Самолет с ICAO24 {icao24} успешно удален.")
+            print(f"База обновлена. Теперь в ней {len(new_list)} самолетов.")
         else:
             print(f"Внимание: самолет с ICAO24 {icao24} не найден в файле.")
 

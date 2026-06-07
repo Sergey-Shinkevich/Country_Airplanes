@@ -16,16 +16,28 @@ class Airplane:
         self.geo_altitude = float(geo_altitude) if geo_altitude is not None else 0.0
 
     def __lt__(self, other: Airplane) -> Any:
-        return self.velocity < other.velocity and self.geo_altitude < other.geo_altitude
+        """Метод сравнения "<" скорости и высоты"""
+        if self.geo_altitude != other.geo_altitude:
+            return self.geo_altitude < other.geo_altitude
+        return self.velocity < other.velocity
 
     def __le__(self, other: Airplane) -> Any:
-        return self.velocity <= other.velocity and self.geo_altitude <= other.geo_altitude
+        """Метод сравнения "<=" скорости и высоты"""
+        if self.geo_altitude != other.geo_altitude:
+            return self.geo_altitude <= other.geo_altitude
+        return self.velocity <= other.velocity
 
     def __gt__(self, other: Airplane) -> Any:
-        return self.velocity > other.velocity and self.geo_altitude > other.geo_altitude
+        """Метод сравнения ">" скорости и высоты"""
+        if self.geo_altitude != other.geo_altitude:
+            return self.geo_altitude > other.geo_altitude
+        return self.velocity > other.velocity
 
     def __ge__(self, other: Airplane) -> Any:
-        return self.velocity >= other.velocity and self.geo_altitude >= other.geo_altitude
+        """Метод сравнения ">=" скорости и высоты"""
+        if self.geo_altitude != other.geo_altitude:
+            return self.geo_altitude >= other.geo_altitude
+        return self.velocity >= other.velocity
 
     @classmethod
     def from_api(cls, state: list) -> Any:
