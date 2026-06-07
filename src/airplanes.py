@@ -39,4 +39,3 @@ class Airplane:
             )
             planes_list.append(plane)
         return planes_list
-
