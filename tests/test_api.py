@@ -9,7 +9,7 @@ from src.api import AirTrafficAPI
 def test_initialization() -> None:
     """Проверка, что класс создается корректно"""
     api = AirTrafficAPI()
-    assert api.aeroplanes is None
+    assert api.airplanes is None
 
 
 @patch("src.api.AirTrafficAPI.connect")  # Мокаем connect
@@ -44,7 +44,7 @@ def test_get_data_success(mock_get: Any, mock_connect: Any) -> None:
     api = AirTrafficAPI()
     api.get_data("Canada")
 
-    assert api.aeroplanes is not None
-    assert api.aeroplanes["states"][0][0] == "icao1"
+    assert api.airplanes is not None
+    assert api.airplanes["states"][0][0] == "icao1"
     assert mock_get.call_count == 2
     mock_connect.assert_called_once()

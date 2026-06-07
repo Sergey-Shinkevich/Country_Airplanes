@@ -27,7 +27,7 @@ class AirTrafficAPI(APIClient):
         """Метод - конструктор"""
         self.__nominatim_url = "https://nominatim.openstreetmap.org/search"
         self.__opensky_url = "https://opensky-network.org/api/states/all"
-        self.aeroplanes = None
+        self.airplanes = None
 
     def connect(self) -> bool:
         """Проверяет доступность API."""
@@ -66,7 +66,7 @@ class AirTrafficAPI(APIClient):
             }
             response_sky = requests.get(self.__opensky_url, params=params_sky, timeout=10)
             response_sky.raise_for_status()
-            self.aeroplanes = response_sky.json()
+            self.airplanes = response_sky.json()
 
             # Обработка ошибок
         except ValueError:

@@ -6,7 +6,7 @@ class Airplane:
         """Конструктор класса Airplanes"""
         self.icao24 = icao24
         self.country = country
-        self.callsign = (icao24[0:3] + country) if callsign is None else callsign
+        self.callsign = (icao24[0:3] + country) if callsign.strip() in [None, ""] else callsign
         self.velocity = float(velocity) if velocity is not None else 0.0
         self.geo_altitude = float(geo_altitude) if geo_altitude is not None else 0.0
 
